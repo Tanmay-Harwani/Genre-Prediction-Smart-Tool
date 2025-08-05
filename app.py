@@ -1,11 +1,16 @@
 import streamlit as st
 import joblib
 import spacy
+from spacy.cli import download as spacy_download
 
 model = joblib.load('saved_model/model.pkl')
 vectorizer = joblib.load('saved_model/vectorizer.pkl')
 
-nlp = spacy.load("en_core_web_sm")
+try:
+    nlp = spacy.load("en_core_web_sm")
+except OSError:
+    spacy_download("en_core_web_sm")
+    nlp = spacy.load("en_core_web_sm")
 
 def preprocess(text):
     doc = nlp(text.lower())

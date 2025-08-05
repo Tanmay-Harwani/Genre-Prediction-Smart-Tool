@@ -5,12 +5,18 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.metrics import accuracy_score, f1_score, confusion_matrix
 import joblib
+from spacy.cli import download as spacy_download
 
 df = pd.read_csv('lyrics_dataset.csv')
 
 df = df[['Lyric', 'Genre']].dropna()
 
-nlp = spacy.load('en_core_web_sm')
+try:
+    nlp = spacy.load('en_core_web_sm')
+except OSError:
+    spacy_download("en_core_web_sm")
+    nlp = spacy.load("en_core_web_sm")
+
 
 def preprocess(text):
     doc = nlp(text.lower())
